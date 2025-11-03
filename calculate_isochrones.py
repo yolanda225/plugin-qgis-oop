@@ -30,7 +30,7 @@ from qgis.core import QgsProject, QgsVectorLayer, QgsVectorFileWriter
 
 # Initialize Qt resources from file resources.py
 from .resources import *
-from .IGNResponse import IGNResponse
+from .IGNCapabilities import IGNCapabilities
 from .IGNRequest import IGNRequest
 # Import the code for the dialog
 from .calculate_isochrones_dialog import CalculateIsochronesDialog
@@ -203,6 +203,20 @@ class CalculateIsochrones:
         options.driverName = "GPKG"
         QgsVectorFileWriter.writeAsVectorFormatV3(layer, output_path, context, options)
 
+    def populate_comboBoxes(self):
+        # clear the combo boxes from previous runs
+        self.dlg.comboBoxTimeUnit.clear()
+        self.dlg.comboBoxProfile.clear()
+        self.dlg.comboBoxDirection.clear()
+        self.dlg.comboBoxCRS.clear()
+        # populate all other combo boxes depending on selected resource and capabilities
+        ign_capabilities = IGNCapabilities("https://data.geopf.fr/navigation/getcapabilities")
+        resource = self.dlg.comboBoxResource.currentText()
+        ign_capabilities.populate_comboBox(resource, 'timeUnit', self.dlg.comboBoxTimeUnit)
+        ign_capabilities.populate_comboBox(resource, 'profile', self.dlg.comboBoxProfile)
+        ign_capabilities.populate_comboBox(resource, 'direction', self.dlg.comboBoxDirection)
+        ign_capabilities.populate_comboBox(resource, 'projection', self.dlg.comboBoxCRS)
+
     def run(self):
         """Run method that performs all the real work"""
 
@@ -217,19 +231,33 @@ class CalculateIsochrones:
         self.dlg.comboBoxResource.clear()
         # Populate the comboBox with names of all the resources
         self.dlg.comboBoxResource.addItems(["bdtopo-pgr", "bdtopo-valhalla", "pgr_sgl_r100_all"])
+        self.dlg.comboBoxResource.activated.connect(self.populate_comboBoxes)
         # show the dialog
         self.dlg.show()
         # Run the dialog event loop
         result = self.dlg.exec_()
+
         # See if OK was pressed
         if result:
             # get values of the elements
             resource = self.dlg.comboBoxResource.currentText()
             starting_point = self.dlg.lineEditStartingPoint.text()
             cost_value = self.dlg.lineEditCostValue.text()
+            time_unit = self.dlg.comboBoxTimeUnit.currentText()
+            profile = self.dlg.comboBoxProfile.currentText()
+            direction = self.dlg.comboBoxDirection.currentText()
+            crs = self.dlg.comboBoxCRS.currentText()
+            constraints = self.dlg.textEditConstraints.toPlainText()
 
             # do request with elements
-            ign_request = IGNRequest(resource, starting_point, cost_value)
+            ign_request = IGNRequest(resource, 
+                                     starting_point, 
+                                     cost_value, 
+                                     profile=profile, 
+                                     timeUnit=time_unit, 
+                                     direction=direction, 
+                                     crs=crs,
+                                     constraints=constraints)
             output_geojson = ign_request.do_request()
 
             # response.json as file for now
