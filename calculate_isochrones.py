@@ -25,6 +25,7 @@ from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QFileDialog
 from qgis.core import QgsProject, QgsVectorLayer, QgsVectorFileWriter
+import qgis.utils
 
 
 
@@ -217,6 +218,10 @@ class CalculateIsochrones:
         ign_capabilities.populate_comboBox(resource, 'direction', self.dlg.comboBoxDirection)
         ign_capabilities.populate_comboBox(resource, 'projection', self.dlg.comboBoxCRS)
 
+    def show_help(self):
+        print("Help button clicked")
+        qgis.utils.showPluginHelp()
+
     def run(self):
         """Run method that performs all the real work"""
 
@@ -232,6 +237,7 @@ class CalculateIsochrones:
         # Populate the comboBox with names of all the resources
         self.dlg.comboBoxResource.addItems(["bdtopo-pgr", "bdtopo-valhalla", "pgr_sgl_r100_all"])
         self.dlg.comboBoxResource.activated.connect(self.populate_comboBoxes)
+        self.dlg.pushButtonHelp.clicked.connect(self.show_help)
         # show the dialog
         self.dlg.show()
         # Run the dialog event loop

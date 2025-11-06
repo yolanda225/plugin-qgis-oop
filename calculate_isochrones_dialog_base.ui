@@ -262,6 +262,19 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;{&amp;quot;constraintType&amp;quot;:&amp;quot;banned&amp;quot;,&amp;quot;key&amp;quot;:&amp;quot;wayType&amp;quot;,&amp;quot;operator&amp;quot;:&amp;quot;=&amp;quot;,&amp;quot;value&amp;quot;:&amp;quot;autoroute&amp;quot;}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButtonHelp">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>470</y>
+     <width>60</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Help</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>
