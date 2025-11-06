@@ -63,9 +63,10 @@ class IGNRequest:
         with open('response.json', 'wb') as f:
             f.write(response.content)
         data = json.loads(response.content)
-        s = json.dumps(data)
+        geometry = data["geometry"] # needed for windows
+        s = json.dumps(geometry)
         return s
 
 # testing
 ign_request = IGNRequest("bdtopo-valhalla", "2.337306,48.849319", 100)
-print(ign_request.do_request())
+ign_request.do_request()
