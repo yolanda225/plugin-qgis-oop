@@ -47,18 +47,18 @@
     <rect>
      <x>30</x>
      <y>450</y>
-     <width>121</width>
+     <width>191</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>Select output file</string>
+    <string>Select output file (optional)</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEditOutputFile">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>230</x>
      <y>450</y>
      <width>141</width>
      <height>25</height>
@@ -100,6 +100,11 @@
      <height>25</height>
     </rect>
    </property>
+   <item>
+    <property name="text">
+     <string/>
+    </property>
+   </item>
   </widget>
   <widget class="QLineEdit" name="lineEditCostValue">
    <property name="geometry">
