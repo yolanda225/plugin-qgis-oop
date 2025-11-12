@@ -55,12 +55,16 @@ class IGNRequest:
             response.raise_for_status()
         except requests.exceptions.HTTPError as errh:
             print ("Http Error:",errh)
+            return
         except requests.exceptions.ConnectionError as errc:
             print ("Error Connecting:",errc)
+            return
         except requests.exceptions.Timeout as errt:
             print ("Timeout Error:",errt)
+            return
         except requests.exceptions.RequestException as err:
             print ("OOps: Something Else",err)
+            return
         with open('response.json', 'wb') as f:
             f.write(response.content)
         data = json.loads(response.content)

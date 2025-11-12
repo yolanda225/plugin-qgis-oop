@@ -23,7 +23,7 @@
 """
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QAction, QFileDialog
+from qgis.PyQt.QtWidgets import QAction, QFileDialog, QMessageBox
 from qgis.core import QgsProject, QgsVectorLayer, QgsVectorFileWriter, QgsCoordinateTransform, QgsCoordinateReferenceSystem
 import qgis.utils
 from qgis.gui import QgsMapToolEmitPoint
@@ -209,6 +209,7 @@ class CalculateIsochrones:
 
     def populate_comboBoxes(self):
         # clear the combo boxes from previous runs
+        self.dlg.comboBoxType.clear()
         self.dlg.comboBoxTimeUnit.clear()
         self.dlg.comboBoxDistanceUnit.clear()
         self.dlg.comboBoxProfile.clear()
@@ -250,7 +251,7 @@ class CalculateIsochrones:
         self.dlg.lineEditStartingPoint.setText(f"{geo_point.x():.6f}, {geo_point.y():6f}")
         self.canvas.unsetMapTool(self.pointTool)
 
-    def update_crs(self):
+    def _update_crs(self):
         self.selected_crs = self.dlg.comboBoxCRS.currentText()
 
     def run(self):
@@ -268,7 +269,7 @@ class CalculateIsochrones:
         # Populate the comboBox with names of all the resources
         self.dlg.comboBoxResource.addItems(["bdtopo-pgr", "bdtopo-valhalla", "pgr_sgl_r100_all"])
         self.dlg.comboBoxResource.activated.connect(self.populate_comboBoxes)
-        self.dlg.comboBoxCRS.activated.connect(self.update_crs)
+        self.dlg.comboBoxCRS.activated.connect(self._update_crs)
         self.dlg.pushButtonHelp.clicked.connect(self.show_help)
         self.dlg.pushButtonCoordinates.clicked.connect(self.select_coordinates)
         # show the dialog
@@ -302,7 +303,9 @@ class CalculateIsochrones:
                                      crs=crs,
                                      constraints=constraints)
             output_geojson = ign_request.do_request()
-
+            if output_geojson == None or output_geojson == 'null': # handle case where request unsuccessful
+                QMessageBox.critical(None, "Failed to calculate",'No valid Response from Geoportal, possibly caused by unrealistic (to small or big) values.') 
+                return
             # add layer to qgis instance
             layer = QgsVectorLayer(output_geojson, "isochrone_layer", "ogr")
             QgsProject.instance().addMapLayer(layer)
