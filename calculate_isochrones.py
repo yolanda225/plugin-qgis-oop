@@ -227,9 +227,9 @@ class CalculateIsochrones:
         ign_capabilities.populate_comboBox(resource, 'projection', self.dlg.comboBoxCRS)
 
     def show_help(self):
-        print("Help button clicked")
         webbrowser.open('https://github.com/yolanda225/plugin-qgis-oop?tab=readme-ov-file')
-        qgis.utils.showPluginHelp()
+        #qgis.utils.showPluginHelp()
+
 
     def select_coordinates(self):
         """select coordinates of a point by mouse clicking on the map
@@ -247,7 +247,6 @@ class CalculateIsochrones:
         """
         src_crs = self.canvas.mapSettings().destinationCrs()
         dest_crs = QgsCoordinateReferenceSystem(self.selected_crs)
-        print(self.selected_crs)
         xform = QgsCoordinateTransform(src_crs, dest_crs, QgsProject.instance())
         geo_point = xform.transform(pointTool)
         self.dlg.lineEditStartingPoint.setText(f"{geo_point.x():.6f}, {geo_point.y():6f}")
