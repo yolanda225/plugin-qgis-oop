@@ -2,6 +2,5 @@
     <qresource prefix="/plugins/calculate_isochrones" >
         <file>icon.png</file>
         <file>response.json</file>
-        <file>index-ll_cc.html</file>
     </qresource>
 </RCC>
