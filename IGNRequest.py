@@ -5,7 +5,7 @@ BASE_URL = "https://data.geopf.fr/navigation/isochrone?"
 
 class IGNRequest:
 
-    def __init__(self, resource, point, costValue, costType="time", profile="car", direction="departure", crs="EPSG:4326", geometryFormat="geojson", timeUnit="second", constraints=""):
+    def __init__(self, resource, point, costValue, costType="time", profile="car", direction="departure", crs="EPSG:4326", geometryFormat="geojson", timeUnit="second", distanceUnit="meter", constraints=""):
         """initialize IGNRequest object
 
         Args:
@@ -22,13 +22,14 @@ class IGNRequest:
         """     
         self.resource = resource
         self.point = point
-        self.costValue = costValue
         self.costType = costType
+        self.costValue = costValue
         self.profile = profile
         self.direction = direction
         self.crs = crs
         self.geometryFormat = geometryFormat
         self.timeUnit = timeUnit
+        self.distanceUnit = distanceUnit
         self.constraints = constraints
 
     def _build_url(self):

@@ -210,13 +210,16 @@ class CalculateIsochrones:
     def populate_comboBoxes(self):
         # clear the combo boxes from previous runs
         self.dlg.comboBoxTimeUnit.clear()
+        self.dlg.comboBoxDistanceUnit.clear()
         self.dlg.comboBoxProfile.clear()
         self.dlg.comboBoxDirection.clear()
         self.dlg.comboBoxCRS.clear()
         # populate all other combo boxes depending on selected resource and capabilities
         ign_capabilities = IGNCapabilities("https://data.geopf.fr/navigation/getcapabilities")
         resource = self.dlg.comboBoxResource.currentText()
+        ign_capabilities.populate_comboBox(resource, 'costType', self.dlg.comboBoxType)
         ign_capabilities.populate_comboBox(resource, 'timeUnit', self.dlg.comboBoxTimeUnit)
+        ign_capabilities.populate_comboBox(resource, 'distanceUnit', self.dlg.comboBoxDistanceUnit)
         ign_capabilities.populate_comboBox(resource, 'profile', self.dlg.comboBoxProfile)
         ign_capabilities.populate_comboBox(resource, 'direction', self.dlg.comboBoxDirection)
         ign_capabilities.populate_comboBox(resource, 'projection', self.dlg.comboBoxCRS)
@@ -278,8 +281,10 @@ class CalculateIsochrones:
             # get values of the elements
             resource = self.dlg.comboBoxResource.currentText()
             starting_point = self.dlg.lineEditStartingPoint.text()
+            cost_type = self.dlg.comboBoxType.currentText()
             cost_value = self.dlg.lineEditCostValue.text()
             time_unit = self.dlg.comboBoxTimeUnit.currentText()
+            dist_unit = self.dlg.comboBoxDistanceUnit.currentText()
             profile = self.dlg.comboBoxProfile.currentText()
             direction = self.dlg.comboBoxDirection.currentText()
             crs = self.dlg.comboBoxCRS.currentText()
@@ -287,18 +292,16 @@ class CalculateIsochrones:
 
             # do request with elements
             ign_request = IGNRequest(resource, 
-                                     starting_point, 
+                                     starting_point,
                                      cost_value, 
+                                     costType=cost_type,
                                      profile=profile, 
-                                     timeUnit=time_unit, 
+                                     timeUnit=time_unit,
+                                     distanceUnit=dist_unit, 
                                      direction=direction, 
                                      crs=crs,
                                      constraints=constraints)
             output_geojson = ign_request.do_request()
-
-            # response.json as file for now
-            # response_path = ':/plugins/calculate_isochrones/response.json'
-            # ign_response = IGNResponse(response_path)
 
             # add layer to qgis instance
             layer = QgsVectorLayer(output_geojson, "isochrone_layer", "ogr")

@@ -111,7 +111,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>1</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -124,7 +124,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Insert time value</string>
+    <string>Insert value</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -145,20 +145,20 @@
     <rect>
      <x>30</x>
      <y>180</y>
-     <width>111</width>
+     <width>71</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Select time unit</string>
+    <string>Time unit</string>
    </property>
   </widget>
   <widget class="QComboBox" name="comboBoxTimeUnit">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>110</x>
      <y>180</y>
-     <width>191</width>
+     <width>91</width>
      <height>25</height>
     </rect>
    </property>
@@ -309,6 +309,29 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>🞣</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>180</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Distance unit</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBoxDistanceUnit">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>180</y>
+     <width>91</width>
+     <height>25</height>
+    </rect>
    </property>
   </widget>
  </widget>
