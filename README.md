@@ -44,7 +44,8 @@ https://www.geoportail.gouv.fr/depot/swagger/itineraire.html#/Utilisation/isochr
 ---
 
 ### CRS
-Projection used to express coordinates and retrieve geometries
+Projection used to express coordinates and retrieve geometries.
+The selected starting point will be transformed into this CRS
 
 ---
 
