@@ -24,8 +24,9 @@
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QFileDialog
-from qgis.core import QgsProject, QgsVectorLayer, QgsVectorFileWriter
+from qgis.core import QgsProject, QgsVectorLayer, QgsVectorFileWriter, QgsCoordinateTransform, QgsCoordinateReferenceSystem
 import qgis.utils
+from qgis.gui import QgsMapToolEmitPoint
 
 
 
@@ -51,6 +52,8 @@ class CalculateIsochrones:
         """
         # Save reference to the QGIS interface
         self.iface = iface
+        self.canvas = iface.mapCanvas()
+        self.selected_crs = "EPSG:4326" # take as default
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
         # initialize locale
@@ -222,6 +225,31 @@ class CalculateIsochrones:
         print("Help button clicked")
         qgis.utils.showPluginHelp()
 
+    def select_coordinates(self):
+        """select coordinates of a point by mouse clicking on the map
+        """
+        self.pointTool = QgsMapToolEmitPoint(self.canvas)
+        self.pointTool.canvasClicked.connect(self.display_point)
+        # activate the tool
+        self.canvas.setMapTool(self.pointTool)
+
+    def display_point(self, pointTool ): 
+        """display selected point in lineEdit and transform to selected CRS
+
+        Args:
+            pointTool (QgsPointXY): point selected by mouse click
+        """
+        src_crs = self.canvas.mapSettings().destinationCrs()
+        dest_crs = QgsCoordinateReferenceSystem(self.selected_crs)
+        print(self.selected_crs)
+        xform = QgsCoordinateTransform(src_crs, dest_crs, QgsProject.instance())
+        geo_point = xform.transform(pointTool)
+        self.dlg.lineEditStartingPoint.setText(f"{geo_point.x():.6f}, {geo_point.y():6f}")
+        self.canvas.unsetMapTool(self.pointTool)
+
+    def update_crs(self):
+        self.selected_crs = self.dlg.comboBoxCRS.currentText()
+
     def run(self):
         """Run method that performs all the real work"""
 
@@ -237,7 +265,9 @@ class CalculateIsochrones:
         # Populate the comboBox with names of all the resources
         self.dlg.comboBoxResource.addItems(["bdtopo-pgr", "bdtopo-valhalla", "pgr_sgl_r100_all"])
         self.dlg.comboBoxResource.activated.connect(self.populate_comboBoxes)
+        self.dlg.comboBoxCRS.activated.connect(self.update_crs)
         self.dlg.pushButtonHelp.clicked.connect(self.show_help)
+        self.dlg.pushButtonCoordinates.clicked.connect(self.select_coordinates)
         # show the dialog
         self.dlg.show()
         # Run the dialog event loop
