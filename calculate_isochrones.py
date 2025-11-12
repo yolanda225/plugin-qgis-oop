@@ -27,6 +27,7 @@ from qgis.PyQt.QtWidgets import QAction, QFileDialog, QMessageBox
 from qgis.core import QgsProject, QgsVectorLayer, QgsVectorFileWriter, QgsCoordinateTransform, QgsCoordinateReferenceSystem
 import qgis.utils
 from qgis.gui import QgsMapToolEmitPoint
+import webbrowser
 
 
 
@@ -227,6 +228,7 @@ class CalculateIsochrones:
 
     def show_help(self):
         print("Help button clicked")
+        webbrowser.open('https://github.com/yolanda225/plugin-qgis-oop?tab=readme-ov-file')
         qgis.utils.showPluginHelp()
 
     def select_coordinates(self):
